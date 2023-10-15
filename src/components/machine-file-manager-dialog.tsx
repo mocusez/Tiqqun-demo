@@ -20,7 +20,7 @@ import {
     TableHeader,
     TableRow,
   } from "~/components/ui/table"
-  import {
+import {
     ColumnDef,
     ColumnFiltersState,
     SortingState,
@@ -50,50 +50,39 @@ import {
 } from "~/components/ui/dropdown-menu"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
-interface MachineDiskSituationProps extends React.HTMLAttributes<HTMLFormElement> {}
+interface MachineFileManagerProps extends React.HTMLAttributes<HTMLFormElement> {}
 
 
-const data: Payment[] = [
-    {
-        id: "m5gr84i9",
-        amount: 316,
-        status: "success",
-        email: "ken99@yahoo.com",
-    },
-    {
-        id: "3u1reuv4",
-        amount: 242,
-        status: "success",
-        email: "Abe45@gmail.com",
-    },
-    {
-        id: "derv1ws0",
-        amount: 837,
-        status: "processing",
-        email: "Monserrat44@gmail.com",
-    },
-    {
-        id: "5kma53ae",
-        amount: 874,
-        status: "success",
-        email: "Silas22@gmail.com",
-    },
-    {
-        id: "bhqecj4p",
-        amount: 721,
-        status: "failed",
-        email: "carmella@hotmail.com",
-    },
-    ]
+const data: File[] = [
+  {
+    name: "C",
+    time: "2022-06-29 17:56:51",
+    mode: "0777",
+    size: "7.70MB",
+  },
+  {
+    name: "D",
+    time: "2022-06-29 17:56:51",
+    mode: "0777",
+    size: "7.70MB",
+  },
+  {
+    name: "E",
+    time: "2022-06-29 17:56:51",
+    mode: "0777",
+    size: "7.70MB",
+  },
+]
    
-export type Payment = {
-    id: string
-    amount: number
-    status: "pending" | "processing" | "success" | "failed"
-    email: string
+export type File = {
+    name: string,
+    time: string,
+    mode: string,
+    size: string,
+    operation: string,
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<File>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -114,45 +103,45 @@ export const columns: ColumnDef<Payment>[] = [
       enableHiding: false,
     },
     {
-      accessorKey: "status",
-      header: "Status",
+      accessorKey: "name",
+      header: "Name",
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("status")}</div>
+        <div className="capitalize">{row.getValue("name")}</div>
       ),
     },
     {
-      accessorKey: "email",
+      accessorKey: "time",
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Email
+            Time
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+      cell: ({ row }) => <div className="lowercase">{row.getValue("time")}</div>,
     },
     {
-      accessorKey: "amount",
-      header: () => <div className="text-right">Amount</div>,
+      accessorKey: "mode",
+      header: () => <div className="text-right">Mode</div>,
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("amount"))
-   
-        // Format the amount as a dollar amount
-        const formatted = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "USD",
-        }).format(amount)
-   
-        return <div className="text-right font-medium">{formatted}</div>
+        const mode = parseFloat(row.getValue("mode"))   
+        return <div className="text-right font-medium">{mode}</div>
       },
     },
     {
-      id: "actions",
-      enableHiding: false,
+      accessorKey: "size",
+      header: "Size",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("size")}</div>
+      ),
+    },
+    {
+      id: "operations",
+      header: "Operation",
       cell: ({ row }) => {
         const payment = row.original
    
@@ -166,14 +155,10 @@ export const columns: ColumnDef<Payment>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
-                Copy payment ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
+              <DropdownMenuItem>Rename</DropdownMenuItem>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>Download</DropdownMenuItem>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -182,8 +167,8 @@ export const columns: ColumnDef<Payment>[] = [
   ]
 
 
-export function MachineDiskSituationDialog({ className, ...props }: MachineDiskSituationProps) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
+export function MachineFileManagerDialog({ className, ...props }: MachineFileManagerProps) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -211,17 +196,17 @@ export function MachineDiskSituationDialog({ className, ...props }: MachineDiskS
   })
  
   return (
-    <DialogContent className="sm:max-w-[1500px]">
+  <DialogContent className="sm:max-w-[1200px]">
     <DialogHeader>
       <DialogTitle>File manager</DialogTitle>
     </DialogHeader>
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter files..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -327,6 +312,6 @@ export function MachineDiskSituationDialog({ className, ...props }: MachineDiskS
         </div>
       </div>
     </div>
-    </DialogContent>
+  </DialogContent>
   )
 }
