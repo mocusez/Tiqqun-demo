@@ -79,7 +79,6 @@ export type File = {
     time: string,
     mode: string,
     size: string,
-    operation: string,
 }
 
 export const columns: ColumnDef<File>[] = [
