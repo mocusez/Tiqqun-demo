@@ -64,5 +64,5 @@ export type Machine = {
   User: string,
   HostName: string,
   OS: string,
-  Connect: string,
+  Connect: "Online"|"Offline",
 }
