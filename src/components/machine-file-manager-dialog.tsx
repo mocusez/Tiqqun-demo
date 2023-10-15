@@ -127,8 +127,7 @@ export const columns: ColumnDef<File>[] = [
       accessorKey: "mode",
       header: () => <div className="text-right">Mode</div>,
       cell: ({ row }) => {
-        const mode = parseFloat(row.getValue("mode"))   
-        return <div className="text-right font-medium">{mode}</div>
+        return <div className="text-right font-medium">{row.getValue("mode")}</div>
       },
     },
     {
