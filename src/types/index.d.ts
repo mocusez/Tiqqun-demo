@@ -58,11 +58,11 @@ export type SubscriptionPlan = {
 }
 
 export type Machine = {
-  ID: string,
-  IP: string,
-  Remark: string,
-  User: string,
-  HostName: string,
-  OS: string,
-  Connect: "Online"|"Offline",
+  id: string,
+  ip: string,
+  remark: string,
+  user: string,
+  hostname: string,
+  os: string,
+  connect: "Online"|"Offline",
 }
