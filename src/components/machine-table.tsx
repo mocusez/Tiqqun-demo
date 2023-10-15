@@ -21,16 +21,16 @@ import {
     TableRow,
   } from "~/components/ui/table"
 import {
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    useReactTable,
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
 } from "@tanstack/react-table"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
@@ -44,188 +44,198 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
+    DropdownMenuShortcut
 } from "~/components/ui/dropdown-menu"
-import { MachineTableRowActions } from "~/components/machine-table-role-action"
+import { MachineFileManagerDialog } from "~/components/machine-file-manager-dialog"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { Badge } from "~/components/ui/badge"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 import { Machine } from "~/types"
 
-interface MachineFileManagerProps extends React.HTMLAttributes<HTMLFormElement> {}
+interface MachineTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+}
 
-
-const data:Machine[] = [
+export const columns: ColumnDef<Machine>[] = [
   {
-    id: "1",
-    ip: "192.168.92.1",
-    remark: "MyComputer",
-    user: "Administrator",
-    hostname: "Mocus",
-    os: "Windows",
-    connect: "Online",
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
   },
   {
-    id: "2",
-    ip: "192.168.92.2",
-    remark: "",
-    user: "root",
-    hostname: "Susan",
-    os: "Linux",
-    connect: "Offline",
+    accessorKey: "id",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID
+          <ArrowUpDown className="ml-4 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase ml-4">{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "ip",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          IP
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      return <div className="text-right">{row.getValue("ip")}</div>
+    },
+  },
+  {
+    accessorKey: "remark",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Remark
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("remark")}</div>,
+  },
+  {
+    accessorKey: "user",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          User
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("user")}</div>,
+  },
+  {
+    accessorKey: "hostname",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Hostname
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("hostname")}</div>,
+  },
+  {
+    accessorKey: "os",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          OS
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("os")}</div>,
+  },
+  {
+    accessorKey: "connect",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Connect
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const situation:string = row.getValue("connect")
+      if (situation == "Online") return <Badge variant="online">{situation}</Badge>
+      return <Badge variant="offline">{situation}</Badge>
+    },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      return (
+        <Dialog onOpenChange={() => { setTimeout(() => (document.body.style.pointerEvents = ""), 100) }}>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+              >
+                <DotsHorizontalIcon className="h-4 w-4" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[160px]">
+              <DropdownMenuItem>Offline</DropdownMenuItem>
+              <DropdownMenuItem>Capture</DropdownMenuItem>
+              <DropdownMenuItem>Change Remark</DropdownMenuItem>
+                <DialogTrigger asChild>
+                    <DropdownMenuItem>File Manager</DropdownMenuItem>
+                </DialogTrigger>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                Delete
+              <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+            <MachineFileManagerDialog/>
+          </DropdownMenu>
+        </Dialog>
+      )
+    },
   },
 ]
 
-
-export const columns: ColumnDef<Machine>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "id",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            ID
-            <ArrowUpDown className="ml-4 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => <div className="lowercase ml-4">{row.getValue("id")}</div>,
-    },
-    {
-      accessorKey: "ip",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            IP
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => {
-        return <div className="text-right">{row.getValue("ip")}</div>
-      },
-    },
-    {
-      accessorKey: "remark",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Remark
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("remark")}</div>,
-    },
-    {
-      accessorKey: "user",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            User
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("user")}</div>,
-    },
-    {
-      accessorKey: "hostname",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Hostname
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("hostname")}</div>,
-    },
-    {
-      accessorKey: "os",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            OS
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => <div className="lowercase">{row.getValue("os")}</div>,
-    },
-    {
-      accessorKey: "connect",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Connect
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-      cell: ({ row }) => {
-        const situation:string = row.getValue("connect")
-        if (situation == "Online") return <Badge variant="online">{situation}</Badge>
-        return <Badge variant="offline">{situation}</Badge>
-      },
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => {
-        return (
-          <MachineTableRowActions/>
-        )
-      },
-    },
-  ]
-
-
-export function MachineTable({ className, ...props }: MachineFileManagerProps) {
+export function MachineTable <TData, TValue>({
+  columns,
+  data,
+}: MachineTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  // const [idata, setData] = React.useState(data)
+  // const refreshData = () => setData((data) => {data[0].id = 3})
  
   const table = useReactTable({
     data,
