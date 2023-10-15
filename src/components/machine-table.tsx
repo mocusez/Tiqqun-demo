@@ -36,6 +36,7 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Checkbox } from "~/components/ui/checkbox"
 import { Button } from "~/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -192,6 +193,8 @@ export const columns: ColumnDef<Machine>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
+      const machine = row.original
+      const { toast } = useToast()
       return (
         <Dialog onOpenChange={() => { setTimeout(() => (document.body.style.pointerEvents = ""), 100) }}>
           <DropdownMenu>
@@ -205,7 +208,12 @@ export const columns: ColumnDef<Machine>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuItem>Offline</DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => {toast({
+                  description: machine.remark+" is offline !",
+                  })} }>
+                  Offline
+              </DropdownMenuItem>
               <DropdownMenuItem>Capture</DropdownMenuItem>
               <DropdownMenuItem>Change Remark</DropdownMenuItem>
                 <DialogTrigger asChild>
@@ -233,9 +241,6 @@ export function MachineTable <TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-
-  // const [idata, setData] = React.useState(data)
-  // const refreshData = () => setData((data) => {data[0].id = 3})
  
   const table = useReactTable({
     data,
