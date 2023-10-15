@@ -23,7 +23,7 @@ export const dashboardConfig: DashboardConfig = {
     {
       title: "Machines",
       href: "/dashboard",
-      icon: "post",
+      icon: "monitor",
     },
     {
       title: "Settings",
