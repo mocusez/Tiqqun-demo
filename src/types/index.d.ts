@@ -57,8 +57,12 @@ export type SubscriptionPlan = {
   stripePriceId: string
 }
 
-export type UserSubscriptionPlan = SubscriptionPlan &
-  Pick<User, "stripeCustomerId" | "stripeSubscriptionId"> & {
-    stripeCurrentPeriodEnd: number
-    isPro: boolean
-  }
+export type Machine = {
+  ID: string,
+  IP: string,
+  Remark: string,
+  User: string,
+  HostName: string,
+  OS: string,
+  Connect: string,
+}

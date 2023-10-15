@@ -3,6 +3,7 @@ import { DashboardShell } from "~/components/shell"
 import { DashboardHeader } from "~/components/header"
 import { MachineSearch } from "~/components/machine-search"
 import { MachineTableRowActions } from "~/components/machine-table-role-action"
+import { Machine } from "~/types"
 
 import {
   Table,
@@ -21,17 +22,6 @@ export const metadata = {
 }
 
 export default async function DashboardPage() {
-  interface Machine {
-    ID: string,
-    IP: string,
-    Remark: string,
-    User: string,
-    HostName: string,
-    OS: string,
-    Connect: string,
-  }
-
-
   const machines:Machine[] = [
     {
       ID: "1",
