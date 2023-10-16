@@ -24,6 +24,7 @@ import {
   Twitter,
   User,
   X,
+  HardDriveDownload
 } from "lucide-react"
 
 export type Icon = LucideProps
@@ -70,4 +71,5 @@ export const Icons:any = {
   ),
   twitter: Twitter,
   check: Check,
+  agents: HardDriveDownload
 }

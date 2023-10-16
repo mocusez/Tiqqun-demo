@@ -7,10 +7,6 @@ export const dashboardConfig: DashboardConfig = {
       href: "/dashboard",
     },
     {
-      title: "Agents",
-      href: "/agents",
-    },
-    {
       title: "Documentation",
       href: "/docs",
     },
@@ -24,6 +20,11 @@ export const dashboardConfig: DashboardConfig = {
       title: "Machines",
       href: "/dashboard",
       icon: "monitor",
+    },
+    {
+      title: "Agents",
+      href: "/dashboard/agents",
+      icon: "agents",
     },
     {
       title: "Settings",
