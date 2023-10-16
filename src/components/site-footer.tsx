@@ -14,6 +14,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
             Copy Right
           </p>
         </div>
+        <ModeToggle />
       </div>
     </footer>
   )

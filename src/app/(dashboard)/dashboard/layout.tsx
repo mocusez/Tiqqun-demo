@@ -5,8 +5,7 @@ import { dashboardConfig } from "~/config/dashboard"
 import { MainNav } from "~/components/main-nav"
 import { DashboardNav } from "~/components/nav"
 import { SiteFooter } from "~/components/site-footer"
-// import { UserAccountNav } from "~/components/user-account-nav"
-import { ModeToggle } from "~/components/mode-toggle"
+import { UserAccountNav } from "~/components/user-account-nav"
 
 interface DashboardLayoutProps {
   children?: React.ReactNode
@@ -20,7 +19,13 @@ export default async function DashboardLayout({
       <header className="sticky top-0 z-40 border-b bg-background">
         <div className="container flex h-16 items-center justify-between py-4">
           <MainNav items={dashboardConfig.mainNav} />
-          <ModeToggle />
+            <UserAccountNav
+              user={{
+                name: "Mocus",
+                image: null,
+                email: "moucsz@163.com",
+              }}
+            />
         </div>
       </header>
       <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
